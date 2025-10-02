@@ -4,7 +4,7 @@ import numpy as np
 
 #시뮬레이션 파라미터
 r = 0.05   # wheel radius [m]
-l = 0.2    # half distance between wheels [m]
+a = 0.2    # half distance between wheels [m]
 dt = 0.02  # time step [s]
 steps = 3000  
 scale = 200   # m -> px (1 m = 200 px)
@@ -63,7 +63,7 @@ def draw_grid(surf, spacing=0.1, color=(50, 50, 60)):
         y += spacing
 
 
-def draw_robot(surf, x, y, theta, wheel_base=2*l, radius=0.08):
+def draw_robot(surf, x, y, theta, wheel_base=2*a, radius=0.08):
     #로봇 본체와 진행 방향을 그린다
     cx, cy = world_to_screen(x, y)
     body_radius_px = max(3, int(radius * scale))
@@ -123,12 +123,11 @@ def draw_path(surf, pts, color=PATH_COLOR):
     screen_pts = [world_to_screen(px, py) for (px, py) in pts]
     pygame.draw.lines(surf, color, False, screen_pts, 2)
 
-def draw_hud(surf, v, omega, x, y, theta, fps):
+def draw_hud(surf, v, omega, x, y, theta):
     lines = [
         f"x={x: .3f} m, y={y: .3f} m",
         f"theta={theta: .3f} rad",
         f"v={v: .3f} m/s, omega={omega: .3f} rad/s",
-        f"dt={dt: .3f} s, FPS={fps: .1f} (target ~{int(1/dt)})",
         "ESC to quit",
     ]
     x0, y0 = 10, 10
@@ -156,7 +155,7 @@ def main():
         J = np.array([
             [ (r/2.0)*math.cos(theta), (r/2.0)*math.cos(theta) ],
             [ (r/2.0)*math.sin(theta), (r/2.0)*math.sin(theta) ],
-            [ (r/(2.0*l)),            -(r/(2.0*l))           ]
+            [ (r/(2.0*a)),            -(r/(2.0*a))           ]
         ])
 
         # 로봇 속도 계산
